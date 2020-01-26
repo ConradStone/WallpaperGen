@@ -110,9 +110,8 @@ public class Layout {
 	
 	
 	public static void MainRun() {
-		System.out.println("MainRan");
-		
-		NoiseSystem fgh = new NoiseSystem(2000,1080,100f,100f,0f,0f);
+		/*								 width height sx   sy    ox    oy               weight		*/
+		NoiseSystem fgh = new NoiseSystem(1920,1080,100f,100f,0.0f,0.0f, new Color(255,200,20));
 		fgh.toImg();
 	}
 }

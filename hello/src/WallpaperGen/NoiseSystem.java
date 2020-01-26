@@ -19,11 +19,15 @@ public class NoiseSystem {
 	
 	int width;
 	int height;
-	float[][] map;
+	float[][] mapr;
+	float[][] mapg;
+	float[][] mapb;
+	
+	Color weight;
+	
 	ImprovedNoise NGen = new ImprovedNoise();
 	
-	
-	public NoiseSystem(int w, int h, float sx, float sy, float ox, float oy) {
+	public NoiseSystem(int w, int h, float sx, float sy, float ox, float oy, Color wt) {
 		width = w;
 		height = h;
 		
@@ -32,10 +36,12 @@ public class NoiseSystem {
 		offsetX = ox;
 		offsetY = oy;
 		
+		weight = wt;
+		
 		GenNoise();
 	}
 	
-	public void RegenNoise(int w, int h, float sx, float sy, float ox, float oy) {
+	public void RegenNoise(int w, int h, float sx, float sy, float ox, float oy, Color wt) {
 		
 		width = w;
 		height = h;
@@ -45,19 +51,27 @@ public class NoiseSystem {
 		offsetX = ox;
 		offsetY = oy;
 		
+		weight = wt;
+		
 		GenNoise();
 	}
 	
-	public float[][] GenNoise() {
+	public void GenNoise() {
 		
-		map = new float[width][height];
+		float rx = (float)Math.random()*10000;
+		float ry = (float)Math.random()*10000;
+		
+		mapr = new float[width][height];
+		mapg = new float[width][height];
+		mapb = new float[width][height];
 		
 		for(int i = 0; i < width; i++) {
 			for(int j = 0; j < height; j++) {
-				map[i][j] = (float)NGen.noise(i/scaleX*3f + offsetX, j/scaleY*3f + offsetY, 1/3f);
+				mapr[i][j] = (weight.getRed()/255f)* (float) NGen.noise(i/scaleX + rx + offsetX, j/scaleY + ry + offsetY, 0f);
+				mapg[i][j] = (weight.getGreen()/255f)* (float) NGen.noise(i/scaleX + rx + 2*offsetX, j/scaleY + ry + 2*offsetY, 0f);
+				mapb[i][j] = (weight.getBlue()/255f)* (float) NGen.noise(i/scaleX + rx + 3*offsetX, j/scaleY + ry + 3*offsetY, 0f);
 			}
 		}
-		return map;
 	}
 	
 	public String toText() {
@@ -66,24 +80,28 @@ public class NoiseSystem {
 		
 		for(int i = 0; i < width; i++) {
 			for(int j = 0; j < height; j++) {
-				s += map[i][j] + " ";
+				//s += map[i][j] + " ";
 			}
 			s += "\n";
 		}
+		System.out.println("FUNCTION DISABLED: NoiseSystem.toText()");
 		return s;
 	}
 	
 	public void toImg() {
         
         final BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-        Graphics2D g = (Graphics2D)img.getGraphics();
+        Graphics2D gr2d = (Graphics2D)img.getGraphics();
         
         for(int i = 0; i < width; i++) {
             for(int j = 0; j < height; j++) {
-                float c = Math.abs(map[i][j]);
-                //g.setColor(new Color(1f,1f,1f));
-                g.setColor(new Color(0f, c, c));
-                g.fillRect(i, j, 1, 1);
+            	
+                float r = Math.abs(mapr[i][j]);
+                float g = Math.abs(mapg[i][j]);
+                float b = Math.abs(mapb[i][j]);
+                
+                gr2d.setColor(new Color(r, g, b));
+                gr2d.fillRect(i, j, 1, 1);
             }
         }
 
