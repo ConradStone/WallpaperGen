@@ -112,9 +112,7 @@ public class Layout {
 	public static void MainRun() {
 		System.out.println("MainRan");
 		
-		NoiseSystem fgh = new NoiseSystem();
-		System.out.println(fgh.toText());
-		System.out.println(fgh.toText());
-		System.out.println(fgh.toText());
+		NoiseSystem fgh = new NoiseSystem(2000,1080,100f,100f,0f,0f);
+		fgh.toImg();
 	}
 }
